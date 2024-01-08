@@ -1,19 +1,80 @@
 import { User, PrismaClient, Log, Door, User_Door } from '@prisma/client'
+import { get } from 'https';
 const prisma = new PrismaClient()
 
 // Existing mail : browncarrie@example.net
 
 async function getDoors(): Promise<Door[]|false> {
-	
-	let doors:Door[];
-    doors = await prisma.door.findMany()
-    return doors;
-	
+	try{
+	    let doors:Door[];
+        doors = await prisma.door.findMany()
+        return doors;
+    } catch (e) {
+        return false
+    }
+}
+
+type Test = {
+    user: User,
+    hasAccess: boolean
+}
+
+async function getUsers(doorToCheck: Door): Promise<Test[]|false> {
+    try{
+        let usersReturn: Test[] = [];
+	    let usersWithAccess:User[];
+        let usersWithoutAccess:User[];
+        usersWithAccess = await prisma.user.findMany({
+            include:{
+                User_Door: {
+                    where:{
+                        did:{
+                            equals: doorToCheck.id
+                        }
+                    }
+                }
+            }
+        })
+        usersWithoutAccess = await prisma.user.findMany({
+            include:{
+                User_Door: {
+                    where:{
+                        did:{
+                            equals: doorToCheck.id
+                        }
+                    }
+                }
+            }
+        })
+        for(let val of usersWithAccess){
+            let thisUser: Test = {
+                user: val,
+                hasAccess: true
+            }
+            usersReturn.push(thisUser)
+        }
+        for(let val of usersWithoutAccess){
+            let thisUser: Test = {
+                user: val,
+                hasAccess: false
+            }
+            usersReturn.push(thisUser)
+        }
+        return usersReturn;
+    } catch (e) {
+        return false
+    }
 }
 
 async function main() {
-	const doors = await getDoors()
-    console.log(doors)
+    let theDoors = await getDoors()
+    if(theDoors === false) {
+        console.log("Something went wrong...")
+    } else {
+        const doors = await getUsers(theDoors[0])
+        console.log(doors)
+    }
+	
 }
 
 

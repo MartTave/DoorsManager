@@ -1,0 +1,1 @@
+Pour run le script de test: npx ts-node ./DB/prisma/test.ts
