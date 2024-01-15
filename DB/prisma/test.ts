@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 // Existing mail : browncarrie@example.net
 
-async function getDoors(): Promise<Door[]|false> {
+export async function getDoors(): Promise<Door[]|false> {
 	try{
 	    let doors:Door[];
         doors = await prisma.door.findMany()
@@ -19,28 +19,36 @@ type Test = {
     hasAccess: boolean
 }
 
-async function getUsers(doorToCheck: Door): Promise<Test[]|false> {
+async function getUsersForDoor(doorToCheck: Door): Promise<Test[]|false> {
     try{
         let usersReturn: Test[] = [];
 	    let usersWithAccess:User[];
         let usersWithoutAccess:User[];
         usersWithAccess = await prisma.user.findMany({
             include:{
-                User_Door: {
-                    where:{
-                        did:{
-                            equals: doorToCheck.id
-                        }
+                User_Door: true
+            },
+            where:{
+                User_Door:{
+                    some:{
+                       did:{
+                        equals: doorToCheck.id
+                       }
                     }
                 }
             }
         })
         usersWithoutAccess = await prisma.user.findMany({
             include:{
-                User_Door: {
-                    where:{
-                        did:{
-                            equals: doorToCheck.id
+                User_Door: true
+            },
+            where:{
+                User_Door:{
+                    every:{
+                       did:{
+                            not:{
+                                equals: doorToCheck.id
+                            }
                         }
                     }
                 }
@@ -71,7 +79,7 @@ async function main() {
     if(theDoors === false) {
         console.log("Something went wrong...")
     } else {
-        const doors = await getUsers(theDoors[0])
+        const doors = await getUsersForDoor(theDoors[0])
         console.log(doors)
     }
 	
