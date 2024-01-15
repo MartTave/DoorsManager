@@ -1,14 +1,14 @@
 import { User, PrismaClient, Log, Door, User_Door } from '@prisma/client'
-import { get } from 'https';
+import { get } from 'https'
 const prisma = new PrismaClient()
 
 // Existing mail : browncarrie@example.net
 
 export async function getDoors(): Promise<Door[]|false> {
 	try{
-	    let doors:Door[];
+	    let doors:Door[]
         doors = await prisma.door.findMany()
-        return doors;
+        return doors
     } catch (e) {
         return false
     }
@@ -21,9 +21,9 @@ type Test = {
 
 async function getUsersForDoor(doorToCheck: Door): Promise<Test[]|false> {
     try{
-        let usersReturn: Test[] = [];
-	    let usersWithAccess:User[];
-        let usersWithoutAccess:User[];
+        let usersReturn: Test[] = []
+	    let usersWithAccess:User[]
+        let usersWithoutAccess:User[]
         usersWithAccess = await prisma.user.findMany({
             include:{
                 User_Door: true
@@ -74,14 +74,34 @@ async function getUsersForDoor(doorToCheck: Door): Promise<Test[]|false> {
     }
 }
 
+export async function checkUser(un: string, pw: string): Promise<User|false> {
+    let matchingUser: User[]
+    matchingUser = await prisma.user.findMany({
+        where:{
+            username:{
+                equals: un
+            },
+            AND:{
+                password:{
+                    equals: pw
+                }
+            }
+        }
+    })
+    if(matchingUser.length == 0) return false
+    return matchingUser[0]
+}
+
 async function main() {
     let theDoors = await getDoors()
     if(theDoors === false) {
         console.log("Something went wrong...")
     } else {
         const doors = await getUsersForDoor(theDoors[0])
-        console.log(doors)
+        //console.log(doors)
     }
+
+    console.log(await checkUser("test1", "2"))
 	
 }
 
