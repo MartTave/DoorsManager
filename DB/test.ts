@@ -19,7 +19,7 @@ type Test = {
     hasAccess: boolean
 }
 
-async function getUsersForDoor(doorToCheck: Door): Promise<Test[]|false> {
+export async function getUsersForDoor(doorToCheck: Door): Promise<Test[]|false> {
     try{
         let usersReturn: Test[] = []
 	    let usersWithAccess:User[]
@@ -92,6 +92,23 @@ export async function checkUser(un: string, pw: string): Promise<User|false> {
     return matchingUser[0]
 }
 
+export async function getDoorsForUser(user:User): Promise<Door[]|false> {
+    let doorsForUser: Door[]
+    doorsForUser = await prisma.door.findMany({
+        where:{
+            User_Door:{
+                some:{
+                    uid:{
+                        equals: user.id
+                    }
+                }
+            }
+        }
+    })
+    if(doorsForUser.length == 0) return false
+    return doorsForUser
+}
+
 async function main() {
     let theDoors = await getDoors()
     if(theDoors === false) {
@@ -101,7 +118,7 @@ async function main() {
         //console.log(doors)
     }
 
-    console.log(await checkUser("test1", "2"))
+    console.log(await getDoorsForUser({id: 1, username: "hihihi", password: "yo", isadmin: false}))
 	
 }
 
