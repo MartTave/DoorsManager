@@ -2,7 +2,6 @@ import { User, PrismaClient, Log, Door, User_Door } from '@prisma/client'
 import { get } from 'https'
 const prisma = new PrismaClient()
 
-// Existing mail : browncarrie@example.net
 
 export async function getDoors(): Promise<Door[]|false> {
 	try{
