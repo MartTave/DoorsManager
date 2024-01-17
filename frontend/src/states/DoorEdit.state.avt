@@ -1,0 +1,8 @@
+export class DoorEdit extends Aventus.State implements Aventus.IState {
+	/**
+	 * @inheritdoc
+	 */
+	public override get name(): string {
+		return "door/edit";
+	}
+}

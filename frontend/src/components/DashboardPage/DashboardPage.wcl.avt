@@ -1,0 +1,62 @@
+import { MainStateManager } from "../../states/StateManager.state.avt";
+import { Dashboard } from "../../states/Dashboard.state.avt";
+import { Page } from "../Page/Page.wcl.avt";
+
+@OverrideView()
+export class DashboardPage extends Page implements Aventus.DefaultComponent {
+
+	//#region static
+	
+	//#endregion
+	
+	
+	//#region props
+	
+	//#endregion
+	
+	
+	//#region variables
+	
+	@ViewElement()
+	protected doorModel!: HTMLDivElement;
+	@ViewElement()
+	protected doorsList!: HTMLDivElement;
+	//#endregion
+	
+	
+	//#region constructor
+	
+	//#endregion
+	
+	
+	//#region methods
+
+	private getData() {
+		return []
+	}
+
+	@StateActive(Dashboard.name, MainStateManager)
+	private activate() {
+		this.showPage()
+		this.fillList(this.getData());
+	}
+	@StateInactive(Dashboard.name, MainStateManager)
+	private deactivate() {
+		this.hidePage()
+	}
+
+	private fillList(data) {
+		this.doorsList.innerText = "";
+		for(let el of data) {
+			const door: any = this.doorModel.cloneNode(true);
+			door.children[0].children[0].innerText = el.name;
+			door.children[1].toggleAttribute("open", el.open);
+		}
+	}
+
+	protected override postCreation(): void {
+		this.doorModel.remove();
+	}
+	//#endregion
+	
+}

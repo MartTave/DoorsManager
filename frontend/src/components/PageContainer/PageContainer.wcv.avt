@@ -1,5 +1,7 @@
 <av-header></av-header>
 <div @element="content" class="content">
 <av-login-page></av-login-page>
+<av-dashboard-page></av-dashboard-page>
+<av-door-form-page></av-door-form-page>
 </div>
 <av-footer></av-footer>

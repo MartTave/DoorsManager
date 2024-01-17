@@ -17,6 +17,12 @@ export class LoginPage extends Page implements Aventus.DefaultComponent {
 	
 	//#region variables
 	
+	@ViewElement()
+	protected username!: HTMLInputElement;
+	@ViewElement()
+	protected password!: HTMLInputElement;
+
+	private callback: ((e: KeyboardEvent) => void) | undefined;
 	//#endregion
 	
 	
@@ -26,13 +32,32 @@ export class LoginPage extends Page implements Aventus.DefaultComponent {
 	
 	
 	//#region methods
+	private submitForm() {
+		console.log("Submit form with : ", this.password.value, " and ", this.username.value)
+	}
+
+
+	private keyDownEvent(e:KeyboardEvent) {
+		if(e.key === "Enter") {
+			this.submitForm();
+		}
+	}
+
 	@StateActive(Login.name, MainStateManager)
 	private activate() {
-		this.showPage()
+		const that = this;
+		this.callback = (e) => {
+			that.keyDownEvent(e)
+		}
+		this.showPage()	
+		document.addEventListener("keydown", this.callback)
 	}
 	@StateInactive(Login.name, MainStateManager)
 	private deactivate() {
 		this.hidePage()
+		if(this.callback) {
+			document.removeEventListener("keydown", this.callback)
+		}
 	}
 	//#endregion
 	

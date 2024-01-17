@@ -7,11 +7,22 @@
         background-color: var(--bs-primary);
         color: var(--bs-white);
         font-weight: bolder;
-        display: flex;
+        display: none;
         gap: 50px;
         padding-left: 50px;
         justify-content: space-between;
         padding: 0 30px;
+
+
+        &.active {
+            display: flex;
+        }
+
+        &.login {
+            align-items: center;
+            justify-content: center;
+        }
+
         .left {
             display: flex;
             gap: 75px;

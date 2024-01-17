@@ -1,56 +1,74 @@
-import { MainStateManager } from "../../states/StateManager.state.avt"
+import { MainStateManager } from "../../states/StateManager.state.avt";
 
 export class Header extends Aventus.WebComponent implements Aventus.DefaultComponent {
 
-	//#region static
-	
-	//#endregion
-	
-	
-	//#region props
-	
-	//#endregion
-	
-	
-	//#region variables
+    //#region static
+
+    //#endregion
+
+
+    //#region props
+
+    //#endregion
+
+
+    //#region variables
+    @ViewElement()
+    protected header!: HTMLDivElement;
+    @ViewElement()
+    protected loginHeader!: HTMLDivElement;
 	@ViewElement()
-	protected actions!: HTMLDivElement;
-	//#endregion
-	
-	
-	//#region constructor
-	
-	//#endregion
-	
-	
+    protected actions!: HTMLDivElement;
+    //#endregion
 
-	//#region methods
-	@StateActive("^dashboard|users|doors$", MainStateManager)
-	@StateInactive("^dashboard|users|doors$", MainStateManager)
-	protected stateChanged() {
-		const stateName = MainStateManager.getInstance().getState()?.name
-		const children = this.actions.children;
-		for(let i = 0; i < children.length; i++) {
-			const curr = children[i]
-			if (curr.getAttribute("data-state") === stateName) {
-				curr.classList.add("active");
-			} else {
-				curr.classList.remove("active");
-			}
-		}
+
+    //#region constructor
+
+    //#endregion
+
+
+
+    //#region methods
+    @StateActive("^dashboard|users|doors$", MainStateManager)
+    @StateInactive("^dashboard|users|doors$", MainStateManager)
+    protected stateChanged() {
+        const stateName = MainStateManager.getInstance().getState()?.name;
+        const children = this.actions.children;
+        for(let i = 0; i < children.length; i++) {
+            const curr = children[i];
+            if(curr.getAttribute("data-state") === stateName) {
+                curr.classList.add("active");
+            } else {
+                curr.classList.remove("active");
+            }
+        }
+    }
+
+
+	@StateActive("login", MainStateManager)
+	protected loginActive() {
+		this.header.classList.remove("active");
+		this.loginHeader.classList.add("active");
 	}
 
-	/**
-	 * 
-	 */
-	protected activateState(e) {
-		console.log(e.target)
-		if(e.target && e.target.dataset && e.target.dataset["state"]) {
-			MainStateManager.getInstance().setState(e.target.dataset["state"])
-		} else {
-			console.log("Got a click on link but didn't found any data-state property to fallback to...")
-		}
+
+	@StateInactive("login", MainStateManager)
+	protected loginInactive() {
+		this.header.classList.add("active");
+		this.loginHeader.classList.remove("active");
 	}
-	//#endregion
-	
+
+    /**
+     * 
+     */
+    protected activateState(e) {
+        console.log(e.target);
+        if(e.target && e.target.dataset && e.target.dataset["state"]) {
+            MainStateManager.getInstance().setState(e.target.dataset["state"]);
+        } else {
+            console.log("Got a click on link but didn't found any data-state property to fallback to...");
+        }
+    }
+    //#endregion
+
 }

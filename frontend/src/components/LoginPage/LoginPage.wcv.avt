@@ -1,1 +1,11 @@
-<div>This is a login page</div>
+<div class="form">
+    <div class="username">
+        <div class="label">Username</div>
+        <input @element="username" type="text" placeholder="Username">
+    </div>
+    <div class="password">
+        <div class="label">Password</div>
+        <input @element="password" type="password" placeholder="Password">
+    </div>
+    <div class="submit">Login</div>
+</div>

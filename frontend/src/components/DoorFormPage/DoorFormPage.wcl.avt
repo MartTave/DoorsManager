@@ -1,0 +1,38 @@
+import { MainStateManager } from "../../states/StateManager.state.avt";
+import { DoorEdit } from "../../states/DoorEdit.state.avt";
+import { Page } from "../Page/Page.wcl.avt";
+
+export class DoorFormPage extends Page implements Aventus.DefaultComponent {
+
+	//#region static
+	
+	//#endregion
+	
+	
+	//#region props
+	
+	//#endregion
+	
+	
+	//#region variables
+	
+	//#endregion
+	
+	
+	//#region constructor
+	
+	//#endregion
+	
+	
+	//#region methods
+	@StateActive(DoorEdit.name, MainStateManager)
+	private activate() {
+		this.showPage()
+	}
+	@StateInactive(DoorEdit.name, MainStateManager)
+	private deactivate() {
+		this.hidePage()
+	}
+	//#endregion
+	
+}

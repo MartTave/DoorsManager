@@ -1,9 +1,6 @@
 :host {
     width: 100%;
     height: 100%;
-    &:host([visible]) {
-        display:block;
-    }
     &:host(:not([visible])) {
         display: none;
     }
