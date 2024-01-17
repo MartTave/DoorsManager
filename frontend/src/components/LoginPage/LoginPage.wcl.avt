@@ -1,0 +1,39 @@
+import { Login } from "../../states/Login.state.avt";
+import { MainStateManager } from "../../states/StateManager.state.avt";
+import { Page } from "../Page/Page.wcl.avt";
+
+@OverrideView()
+export class LoginPage extends Page implements Aventus.DefaultComponent {
+
+	//#region static
+	
+	//#endregion
+	
+	
+	//#region props
+	
+	//#endregion
+	
+	
+	//#region variables
+	
+	//#endregion
+	
+	
+	//#region constructor
+	
+	//#endregion
+	
+	
+	//#region methods
+	@StateActive(Login.name, MainStateManager)
+	private activate() {
+		this.showPage()
+	}
+	@StateInactive(Login.name, MainStateManager)
+	private deactivate() {
+		this.hidePage()
+	}
+	//#endregion
+	
+}

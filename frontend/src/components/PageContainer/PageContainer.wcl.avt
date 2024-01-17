@@ -1,0 +1,41 @@
+import { MainStateManager } from "../../states/StateManager.state.avt";
+import { Page } from "../Page/Page.wcl.avt";
+import { Login } from "../../states/Login.state.avt";
+
+export class PageContainer extends Aventus.WebComponent implements Aventus.DefaultComponent {
+	
+	
+
+	//#region static
+	
+	//#endregion
+	
+	
+	//#region props
+	
+	//#endregion
+	
+	
+	//#region variables
+	@ViewElement()
+	protected content!: HTMLDivElement;
+
+	//#endregion
+	
+	
+	//#region constructor
+	
+	//#endregion
+	
+	
+	//#region methods
+
+	
+
+	protected override postCreation(): void {
+		let newState = new Login("aha", "ogo")
+		MainStateManager.getInstance().setState(newState)
+	}
+	//#endregion
+	
+}

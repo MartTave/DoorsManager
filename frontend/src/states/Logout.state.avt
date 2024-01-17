@@ -1,0 +1,10 @@
+export class Logout extends Aventus.State implements Aventus.IState {
+	public static readonly stateName:string = "login";
+
+	/**
+	 * @inheritdoc
+	 */
+	public override get name(): string {
+		return Logout.stateName;
+	}
+}

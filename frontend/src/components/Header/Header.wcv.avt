@@ -1,0 +1,17 @@
+<div class="header">
+    <div class="left">
+        <div class="title" @click="activateState" data-state="dashboard">Doors Manager</div>
+        <div @element="actions" class="actions">
+            <a class="dashboard" @click="activateState" data-state="dashboard">Dashboard</a>
+            <a class="doors" @click="activateState" data-state="doors" >Doors</a>
+            <a class="users" @click="activateState" data-state="users">Users</a>
+        </div>
+    </div>
+    <div class="right">
+        <div class="actions">
+            <a class="logout" @click="activateState" data-state="logout">Logout</a>
+        </div>
+    </div>
+    
+    
+</div>
