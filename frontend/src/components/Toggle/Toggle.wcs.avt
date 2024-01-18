@@ -1,0 +1,19 @@
+:host {
+    user-select: none;
+    cursor: pointer;
+    padding: 5px;
+    &:host([value="true"]) div {
+        background-color: var(--bs-green);
+    }
+
+    &:host(:not([value="true"])) div {
+        background-color: var(--bs-red);
+    }
+
+    div {
+        transition: background-color 0.3s;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+    }
+}

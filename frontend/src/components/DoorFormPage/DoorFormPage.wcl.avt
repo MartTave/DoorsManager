@@ -2,6 +2,7 @@ import { MainStateManager } from "../../states/StateManager.state.avt";
 import { DoorEdit } from "../../states/DoorEdit.state.avt";
 import { Page } from "../Page/Page.wcl.avt";
 
+@OverrideView()
 export class DoorFormPage extends Page implements Aventus.DefaultComponent {
 
 	//#region static
@@ -15,7 +16,13 @@ export class DoorFormPage extends Page implements Aventus.DefaultComponent {
 	
 	
 	//#region variables
-	
+	protected personExample!:HTMLDivElement;
+	@ViewElement()
+	protected doorName!: HTMLDivElement;
+	@ViewElement()
+	protected personList!: HTMLDivElement;
+	@ViewElement()
+	protected doorNameInput!: HTMLInputElement;
 	//#endregion
 	
 	
@@ -25,13 +32,38 @@ export class DoorFormPage extends Page implements Aventus.DefaultComponent {
 	
 	
 	//#region methods
-	@StateActive(DoorEdit.name, MainStateManager)
+		
+	/**
+	 * 
+	 */
+	protected doorNameChanged(){
+		this.doorName.innerText = this.doorNameInput.value;
+	}
+	@StateActive(DoorEdit.stateName, MainStateManager)
 	private activate() {
 		this.showPage()
 	}
-	@StateInactive(DoorEdit.name, MainStateManager)
+	@StateInactive(DoorEdit.stateName, MainStateManager)
 	private deactivate() {
 		this.hidePage()
+	}
+
+	private fillData(data) {
+		this.doorNameInput.value = data["name"];
+		this.doorNameChanged();
+		// TODO: Need to call fillPersonList with person data for this door
+	}
+
+	private fillPersonList(data) {
+		for(const p in data) {
+			const newP:any = this.personExample.cloneNode(true);
+			newP.children[0].innerText = p["username"];
+			newP.children[1].children[0].value = p["hasAccess"];
+		}
+	}
+
+	protected override postCreation(): void {
+		this.personExample = this.personList.children[0] as HTMLDivElement
 	}
 	//#endregion
 	

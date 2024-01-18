@@ -1,0 +1,24 @@
+export class DataFetcher {
+    public static getDoor(id:number): Promise<object|Error> {
+        return new Promise(() => {
+
+        });
+    }
+    public static getUser(id: number): Promise<object|Error> {
+
+        return new Promise(() => {
+            
+        });
+    }
+    public static getDoorsForUser(userId: number): Promise<object|Error> {
+
+        return new Promise(() => {
+            
+        });
+    }
+    public static getCurrentUser(id: number): Promise<object|Error> {
+        return new Promise(() => {
+            
+        });
+    }
+}

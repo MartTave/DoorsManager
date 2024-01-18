@@ -1,3 +1,95 @@
 :host {
-	
+    .label {
+        font-size: 18px;
+        height: 30px;
+    }
+
+	.form {
+        width: 100%;
+        height: 100%;
+        > .doorName {
+            height: 40px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .fields  {
+            width: 100%;
+            height: calc(100% - 40px);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            .field {
+                &.doorName {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                    max-width: 400px;
+                    input {
+                        border: 1px solid lightgray;
+                        border-radius: 5px;
+                        padding: 10px 10px;
+                        font-size: 14px;
+                        outline: none;
+                    }
+                }
+                &.personListWrap {
+                    height: calc(100% - 100px);
+                    .personList {
+                        height: calc(100% - 30px);
+                        overflow-y: auto;
+                        border: 1px solid black;
+                        border-radius: 5px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                        .person {
+                            transition: background-color 0.3s;
+                            &:hover {
+                                background-color: rgba(0,0,0, 0.2);
+
+                            }
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin: 5px 5px;
+                            border-radius: 5px;
+                            padding: 0 25px;
+                            .username {
+                                
+                            }
+                            .hasAccess {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            }
+                        }
+                    }
+                }
+                &.actions {
+                    height: 75px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    * {
+                        cursor: pointer;
+                        width: 130px;
+                        height: 35px;
+                        border-radius: 15px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: var(--bs-white);
+
+                        &.submit {
+                            background-color: var(--bs-success);
+                        }
+                        &.cancel {
+                            background-color: var(--bs-secondary);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
