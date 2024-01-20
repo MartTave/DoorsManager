@@ -17,8 +17,8 @@
             </div>
         </div>
         <div class="field actions">
-            <div class="cancel">Cancel</div>
-            <div class="submit">Submit</div>
+            <div class="cancel" @click="cancelEdit">Cancel</div>
+            <div class="submit" @click="submitEdit">Submit</div>
         </div>
     </div>
 </div>

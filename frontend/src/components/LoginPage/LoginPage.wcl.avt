@@ -1,3 +1,4 @@
+import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
 import { Login } from "../../states/Login.state.avt";
 import { MainStateManager } from "../../states/StateManager.state.avt";
 import { Page } from "../Page/Page.wcl.avt";
@@ -34,6 +35,11 @@ export class LoginPage extends Page implements Aventus.DefaultComponent {
 	//#region methods
 	private submitForm() {
 		console.log("Submit form with : ", this.password.value, " and ", this.username.value)
+		DataFetcher.postAction("/login/", {username: this.username.value, password: this.password.value}).then((res) => {
+			if(res.success) {
+				MainStateManager.getInstance().setState("dashboard")
+			}
+		})
 	}
 
 

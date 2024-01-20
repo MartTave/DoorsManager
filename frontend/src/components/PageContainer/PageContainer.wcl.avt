@@ -1,13 +1,14 @@
 import { MainStateManager } from "../../states/StateManager.state.avt";
 import { Page } from "../Page/Page.wcl.avt";
 import { Login } from "../../states/Login.state.avt";
+import { DoorEdit } from "../../states/DoorEdit.state.avt";
+import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
 
 export class PageContainer extends Aventus.WebComponent implements Aventus.DefaultComponent {
 	
 	
 
 	//#region static
-	
 	//#endregion
 	
 	
@@ -33,7 +34,17 @@ export class PageContainer extends Aventus.WebComponent implements Aventus.Defau
 	
 
 	protected override postCreation(): void {
-		MainStateManager.getInstance().setState("door/edit")
+		// Checking if user is logged in
+		DataFetcher.postAction("/amiloggedin/", {}).then((res) => {
+			DataFetcher.logged = res.data.logged
+			DataFetcher.admin = res.data.admin
+			if(!DataFetcher.logged) {
+				MainStateManager.getInstance().setState("login")
+			} else {
+				MainStateManager.getInstance().setState("dashboard")
+			}
+		})
+
 
 	}
 	//#endregion

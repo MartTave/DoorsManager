@@ -1,6 +1,8 @@
 import { MainStateManager } from "../../states/StateManager.state.avt";
 import { DoorEdit } from "../../states/DoorEdit.state.avt";
 import { Page } from "../Page/Page.wcl.avt";
+import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
+import type { Toggle } from "../Toggle/Toggle.wcl.avt";
 
 @OverrideView()
 export class DoorFormPage extends Page implements Aventus.DefaultComponent {
@@ -16,6 +18,7 @@ export class DoorFormPage extends Page implements Aventus.DefaultComponent {
 	
 	
 	//#region variables
+
 	protected personExample!:HTMLDivElement;
 	@ViewElement()
 	protected doorName!: HTMLDivElement;
@@ -23,6 +26,8 @@ export class DoorFormPage extends Page implements Aventus.DefaultComponent {
 	protected personList!: HTMLDivElement;
 	@ViewElement()
 	protected doorNameInput!: HTMLInputElement;
+
+	protected data:any;
 	//#endregion
 	
 	
@@ -32,7 +37,7 @@ export class DoorFormPage extends Page implements Aventus.DefaultComponent {
 	
 	
 	//#region methods
-		
+	
 	/**
 	 * 
 	 */
@@ -40,7 +45,9 @@ export class DoorFormPage extends Page implements Aventus.DefaultComponent {
 		this.doorName.innerText = this.doorNameInput.value;
 	}
 	@StateActive(DoorEdit.stateName, MainStateManager)
-	private activate() {
+	private async activate() {
+		this.data = (await DataFetcher.postAction("/door/get/", {id: (MainStateManager.getInstance().getState() as DoorEdit).doorId})).data
+		this.fillData()
 		this.showPage()
 	}
 	@StateInactive(DoorEdit.stateName, MainStateManager)
@@ -48,22 +55,50 @@ export class DoorFormPage extends Page implements Aventus.DefaultComponent {
 		this.hidePage()
 	}
 
-	private fillData(data) {
-		this.doorNameInput.value = data["name"];
+	private fillData() {
+		this.doorNameInput.value = this.data["name"];
 		this.doorNameChanged();
+		this.fillPersonList(this.data.users)
 		// TODO: Need to call fillPersonList with person data for this door
 	}
 
 	private fillPersonList(data) {
-		for(const p in data) {
+		this.personList.innerText = ""
+		for(const e of data) {
+			const p = e.user
 			const newP:any = this.personExample.cloneNode(true);
+			newP.dataset.id = p.id;
 			newP.children[0].innerText = p["username"];
-			newP.children[1].children[0].value = p["hasAccess"];
+			newP.children[1].children[0].value = e["hasAccess"];
+			this.personList.appendChild(newP)
 		}
+	}
+
+	private async submitEdit() {
+		this.data.name = this.doorNameInput.value;
+		const children = this.personList.children;
+		this.data.User_Door = []
+		for (let i = 0; i < children.length; i++) {
+			const el = children[i] as HTMLDivElement
+			const id = el.dataset.id as string
+			if((el.children[1].children[0] as any).value) {
+				this.data.User_Door.push({
+					uid: parseInt(id)
+				})
+			}
+		}
+		await DataFetcher.postAction("/door/edit/", this.data)
+		MainStateManager.getInstance().setState("dashboard")
 	}
 
 	protected override postCreation(): void {
 		this.personExample = this.personList.children[0] as HTMLDivElement
+	}
+	/**
+	 * 
+	 */
+	protected cancelEdit(){
+		throw new Error("Method not implemented.");
 	}
 	//#endregion
 	

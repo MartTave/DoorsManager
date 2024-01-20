@@ -1,3 +1,4 @@
+import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
 import { MainStateManager } from "../../states/StateManager.state.avt";
 
 export class Header extends Aventus.WebComponent implements Aventus.DefaultComponent {
@@ -61,10 +62,16 @@ export class Header extends Aventus.WebComponent implements Aventus.DefaultCompo
     /**
      * 
      */
-    protected activateState(e) {
-        console.log(e.target);
+    protected async activateState(e) {
         if(e.target && e.target.dataset && e.target.dataset["state"]) {
-            MainStateManager.getInstance().setState(e.target.dataset["state"]);
+            if(e.target.dataset["state"] === "logout") {
+                const res = await DataFetcher.postAction("logout", {})
+                if (res.success) {
+                    MainStateManager.getInstance().setState("login")
+                }
+            } else {
+                MainStateManager.getInstance().setState(e.target.dataset["state"]);
+            }
         } else {
             console.log("Got a click on link but didn't found any data-state property to fallback to...");
         }

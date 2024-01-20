@@ -1,0 +1,17 @@
+export class UserEdit extends Aventus.State implements Aventus.IState {
+	public static readonly stateName:string = "user/edit"
+	
+	public readonly userId: number;
+
+	/**
+	 * @inheritdoc
+	 */
+	public override get name(): string {
+		return UserEdit.stateName;
+	}
+
+	public constructor(userId: number) {
+		super()
+		this.userId = userId
+	}
+}

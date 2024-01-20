@@ -21,6 +21,7 @@ model User {
 
 model Door {
   id        Int         @id @default(autoincrement())
+  name  String @unique
   closed    Boolean     @default(true)
   User_Door User_Door[]
   Log       Log[]

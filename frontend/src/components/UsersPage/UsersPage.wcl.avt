@@ -1,0 +1,57 @@
+import { UserEdit } from "../../states/UserEdit.state.avt";
+import { MainStateManager } from "../../states/StateManager.state.avt";
+import { Users } from "../../states/Users.state.avt";
+import { Page } from "../Page/Page.wcl.avt";
+
+export class UsersPage extends Page implements Aventus.DefaultComponent {
+
+	//#region static
+	
+	//#endregion
+	
+	
+	//#region props
+	
+	//#endregion
+	
+	
+	//#region variables
+
+	@ViewElement()
+	protected userList!: HTMLDivElement;
+	@ViewElement()
+	protected userModel!: HTMLDivElement;
+	//#endregion
+	
+	
+	//#region constructor
+	
+	//#endregion
+	
+	
+	//#region methods
+	@StateActive(Users.stateName, MainStateManager)
+	private activate() {
+		this.showPage()	
+	}
+	@StateInactive(Users.stateName, MainStateManager)
+	private deactivate() {
+		this.hidePage()
+	}
+
+	protected fillList(data) {
+		for(const p of data) {
+			const pers = this.userModel.cloneNode(true) as HTMLDivElement
+			pers.children[0].children[0].innerHTML = data.username
+			pers.children[1].addEventListener("click", () => {
+				MainStateManager.getInstance().setState(new UserEdit(p.id))
+			});
+		}
+	}
+
+	protected override postCreation(): void {
+		this.userModel.remove()
+	}
+	//#endregion
+	
+}

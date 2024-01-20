@@ -1,14 +1,14 @@
+import { DataFetcher } from "../libs/DataFetcher.lib.avt";
+
 export class DoorEdit extends Aventus.State implements Aventus.IState {
+
+	public readonly doorId: number;
 
 	public static readonly stateName:string = "door/edit";
 
 	public constructor(doorId: number) {
 		super()
-		if (doorId === -1) {
-			// we're in creation
-		} else {
-			// We're in edition
-		}
+		this.doorId = doorId;
 	}
 
 	/**

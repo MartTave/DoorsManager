@@ -1,0 +1,10 @@
+export class Users extends Aventus.State implements Aventus.IState {
+	public static readonly stateName:string = "users";
+
+	/**
+	 * @inheritdoc
+	 */
+	public override get name(): string {
+		return Users.stateName;
+	}
+}

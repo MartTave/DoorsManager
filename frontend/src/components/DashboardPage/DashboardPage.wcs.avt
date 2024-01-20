@@ -51,6 +51,7 @@
                 }
 
                 .status {
+                    user-select: none;
                     border-radius: 50%;
                     height: 25px;
                     width: 25px;
