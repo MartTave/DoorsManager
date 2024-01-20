@@ -2,7 +2,9 @@ import { UserEdit } from "../../states/UserEdit.state.avt";
 import { MainStateManager } from "../../states/StateManager.state.avt";
 import { Users } from "../../states/Users.state.avt";
 import { Page } from "../Page/Page.wcl.avt";
+import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
 
+@OverrideView()
 export class UsersPage extends Page implements Aventus.DefaultComponent {
 
 	//#region static
@@ -31,12 +33,22 @@ export class UsersPage extends Page implements Aventus.DefaultComponent {
 	
 	//#region methods
 	@StateActive(Users.stateName, MainStateManager)
-	private activate() {
+	private async activate() {
 		this.showPage()	
+		const data = await this.getData()
+		this.fillList(data)
 	}
 	@StateInactive(Users.stateName, MainStateManager)
 	private deactivate() {
 		this.hidePage()
+	}
+
+	private async getData() {
+		const res = await DataFetcher.postAction("users", {})
+		if (res.success) {
+			return res.data
+		}
+		return []
 	}
 
 	protected fillList(data) {

@@ -3,7 +3,7 @@
         <div class="title" @click="activateState" data-state="dashboard">Doors Manager</div>
         <div @element="actions" class="actions">
             <a class="dashboard" @click="activateState" data-state="dashboard">Dashboard</a>
-            <a class="users" @click="activateState" data-state="users">Users</a>
+            <a class="users" @element="userLink" @click="activateState" data-state="users">Users</a>
         </div>
     </div>
     <div class="right">

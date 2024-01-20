@@ -1,6 +1,4 @@
 export class DataFetcher {
-	public static logged: boolean
-	public static admin:boolean	
 
     public static postAction(url: string, data: object): Promise<any> {
 		console.log("[INFO] POST on ", url, " with ", data)

@@ -3,6 +3,7 @@ import { Dashboard } from "../../states/Dashboard.state.avt";
 import { Page } from "../Page/Page.wcl.avt";
 import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
 import { DoorEdit } from "../../states/DoorEdit.state.avt";
+import { LoggedManager } from "../../libs/LoggedManager.lib.avt";
 
 @OverrideView()
 export class DashboardPage extends Page implements Aventus.DefaultComponent {
@@ -48,8 +49,9 @@ export class DashboardPage extends Page implements Aventus.DefaultComponent {
 		this.hidePage()
 	}
 
-	private fillList(data) {
+	private async fillList(data) {
 		this.doorsList.innerText = "";
+		const isAdmin = await LoggedManager.getAdmin()
 		for(let el of data) {
 			const door: any = this.doorModel.cloneNode(true);
 			door.children[0].children[0].innerText = el.name;
@@ -67,7 +69,7 @@ export class DashboardPage extends Page implements Aventus.DefaultComponent {
 					}
 				}
 			});
-			if(DataFetcher.admin) {
+			if(isAdmin) {
 				door.children[2].addEventListener("click", () => {
 					MainStateManager.getInstance().setState(new DoorEdit(el.id))
 				})

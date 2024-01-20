@@ -1,3 +1,4 @@
+import { LoggedManager } from "../../libs/LoggedManager.lib.avt";
 import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
 import { MainStateManager } from "../../states/StateManager.state.avt";
 
@@ -14,6 +15,10 @@ export class Header extends Aventus.WebComponent implements Aventus.DefaultCompo
 
 
     //#region variables
+    
+    @ViewElement()
+    protected userLink!: HTMLAnchorElement;
+
     @ViewElement()
     protected header!: HTMLDivElement;
     @ViewElement()
@@ -54,9 +59,14 @@ export class Header extends Aventus.WebComponent implements Aventus.DefaultCompo
 
 
 	@StateInactive("login", MainStateManager)
-	protected loginInactive() {
+	protected async loginInactive() {
 		this.header.classList.add("active");
 		this.loginHeader.classList.remove("active");
+        if(await LoggedManager.getAdmin()) {
+            this.userLink.style.display = "block";
+        } else {
+            this.userLink.style.display = "none";
+        }
 	}
 
     /**

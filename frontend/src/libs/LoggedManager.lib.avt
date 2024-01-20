@@ -1,0 +1,63 @@
+import { DataFetcher } from "./DataFetcher.lib.avt"
+
+export class LoggedManager {
+
+    private static loaded:boolean = false
+    private static loading:boolean = false
+    private static admin:boolean = false
+    private static logged:boolean = false
+	
+    public static async getLogged() {
+        if(!LoggedManager.loaded) {
+            if(LoggedManager.loading) {
+                return new Promise((resolve, reject) => {
+                    setTimeout(async () => {
+                        const res = await LoggedManager.getLogged()
+                        resolve(res)
+                    }, 100)
+                })
+            } else {
+                LoggedManager.loading = true
+                await LoggedManager.loadAdmin()
+                LoggedManager.loading = false
+            }
+        }
+        return new Promise((resolve, reject) => {
+            resolve(LoggedManager.logged)
+        })
+    }
+
+    public static async getAdmin() {
+        if(!LoggedManager.loaded) {
+            if(LoggedManager.loading) {
+                return new Promise((resolve, reject) => {
+                    setTimeout(async () => {
+                        const res = await LoggedManager.getAdmin()
+                        resolve(res)
+                    }, 100)
+                })
+            } else {
+                LoggedManager.loading = true
+                await LoggedManager.loadAdmin
+                LoggedManager.loading = false
+            }
+        }
+        return new Promise((resolve, reject) => {
+            resolve(LoggedManager.admin)
+        })
+    }
+
+    public static loadAdmin() {
+        return new Promise(async (resolve, reject) => {
+            const res = await DataFetcher.postAction("amiloggedin", {})
+            if (!res.success) {
+                reject()
+                return
+            }
+            LoggedManager.admin = res.data.admin
+            LoggedManager.logged = res.data.logged 
+            LoggedManager.loaded = true
+            resolve(true)
+        })
+    }
+}
