@@ -1,0 +1,74 @@
+import { LoggedManager } from "../../libs/LoggedManager.lib.avt";
+import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
+import { Login } from "../../states/Login.state.avt";
+import { MainStateManager } from "../../states/StateManager.state.avt";
+import { Page } from "../Page/Page.wcl.avt";
+
+@OverrideView()
+export class LoginPage extends Page implements Aventus.DefaultComponent {
+
+	//#region static
+	
+	//#endregion
+	
+	
+	//#region props
+	
+	//#endregion
+	
+	
+	//#region variables
+	
+	@ViewElement()
+	protected username!: HTMLInputElement;
+	@ViewElement()
+	protected password!: HTMLInputElement;
+
+	private callback: ((e: KeyboardEvent) => void) | undefined;
+	//#endregion
+	
+	
+	//#region constructor
+	
+	//#endregion
+	
+	
+	//#region methods
+	private submitForm() {
+		console.log("Submit form with : ", this.password.value, " and ", this.username.value)
+		DataFetcher.postAction("/login/", {username: this.username.value, password: this.password.value}).then(async (res) => {
+			if(res.success) {
+				await LoggedManager.loadAdmin()
+				MainStateManager.getInstance().setState("dashboard")
+			}
+		})
+	}
+
+
+	private keyDownEvent(e:KeyboardEvent) {
+		if(e.key === "Enter") {
+			this.submitForm();
+		}
+	}
+
+	@StateActive(Login.name, MainStateManager)
+	private activate() {
+		const that = this;
+		this.callback = (e) => {
+			that.keyDownEvent(e)
+		}
+		this.showPage()	
+		document.addEventListener("keydown", this.callback)
+	}
+	@StateInactive(Login.name, MainStateManager)
+	private deactivate() {
+		this.hidePage()
+		this.username.value = ""
+		this.password.value = ""
+		if(this.callback) {
+			document.removeEventListener("keydown", this.callback)
+		}
+	}
+	//#endregion
+	
+}

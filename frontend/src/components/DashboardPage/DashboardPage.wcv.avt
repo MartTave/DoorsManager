@@ -1,0 +1,17 @@
+<div class="content" @element="content">
+    <div class="header">
+        Doors
+    </div>
+    <div @element="doorsList" class="list" editable="true">
+        <div @element="doorModel" class="door">
+            <div class="name">
+                <div class="text">Door1</div>
+            </div>
+            <div class="status" open="true"></div>
+            <div class="edit">
+                <div class="text">Edit</div>
+            </div>
+        </div>
+    </div>
+    <a @element="addDoorButton" @click="addDoor" class="addDoor">addDoor</a>
+</div>

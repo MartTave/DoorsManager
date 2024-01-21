@@ -1,0 +1,22 @@
+export class DataFetcher {
+
+    public static postAction(url: string, data: object): Promise<any> {
+		console.log("[INFO] POST on ", url, " with ", data)
+        return new Promise((resolve, reject) => {
+            fetch(url, {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(async res => {
+				const body = await res.json();
+				if (body.success) {
+					console.log("[INFO] POST success, data : ", body)
+					resolve(body)
+				} else {
+					console.log("[ERROR] POST on ", url, " failed with reason : ", body.reason)
+					reject(body)
+				}
+            });
+        });
+    }
+}

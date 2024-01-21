@@ -1,0 +1,40 @@
+export class Toggle extends Aventus.WebComponent implements Aventus.DefaultComponent {
+
+	//#region static
+	
+	//#endregion
+	
+	
+	//#region props
+	@Property()
+	public value!: boolean;
+	//#endregion
+	
+	
+	//#region variables
+	//#endregion
+	
+	
+	//#region constructor
+	
+	//#endregion
+	
+	
+	//#region methods
+	
+	/**
+	 * 
+	 */
+	protected toggleValue(){
+		this.value = !this.value;
+	}
+
+	protected override postCreation(): void {
+		// Need to add the event here as we're adding it to the element itself, not a children
+		this.addEventListener("click", () => {
+			this.toggleValue();
+		})
+	}
+	//#endregion
+	
+}

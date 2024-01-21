@@ -1,0 +1,146 @@
+import { MainStateManager } from "../../states/StateManager.state.avt";
+import { DoorEdit } from "../../states/DoorEdit.state.avt";
+import { Page } from "../Page/Page.wcl.avt";
+import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
+import type { Toggle } from "../Toggle/Toggle.wcl.avt";
+
+@OverrideView()
+export class DoorFormPage extends Page implements Aventus.DefaultComponent {
+
+	//#region static
+	
+	//#endregion
+	
+	
+	//#region props
+	
+	//#endregion
+	
+	
+	//#region variables
+
+	protected personExample!:HTMLDivElement;
+	@ViewElement()
+	protected doorName!: HTMLDivElement;
+	@ViewElement()
+	protected personList!: HTMLDivElement;
+	@ViewElement()
+	protected doorNameInput!: HTMLInputElement;
+
+	protected data:any;
+	//#endregion
+	
+	
+	//#region constructor
+	
+	//#endregion
+	
+	
+	//#region methods
+	
+	/**
+	 * 
+	 */
+	protected async delete(){
+		if (this.data.id != -1) {
+			const res = await DataFetcher.postAction("/door/delete/", {id: this.data.id})
+			if(res.success) {
+				MainStateManager.getInstance().setState("dashboard")
+			} else {
+				console.log("An error occured during deletion")
+			}
+		} else {
+			MainStateManager.getInstance().setState("dashboard")
+		}
+	}
+	/**
+	 * 
+	 */
+	protected doorNameChanged(){
+		this.doorName.innerText = this.doorNameInput.value;
+	}
+	@StateActive(DoorEdit.stateName, MainStateManager)
+	private async activate() {
+		const id = (MainStateManager.getInstance().getState() as DoorEdit).doorId
+		if(id !== -1) {
+			this.data = (await DataFetcher.postAction("/door/get/", {id})).data
+		} else {
+			let users = (await DataFetcher.postAction("/users/", {})).data
+			for(let i = 0; i < users.length; i++) {
+				users[i] = {
+					user: users[i],
+					hasAccess: false
+				}
+			}
+			this.data = {
+				id: -1,
+				name: "Default",
+				users
+			}
+		}
+		
+		this.fillData()
+		this.showPage()
+	}
+	@StateInactive(DoorEdit.stateName, MainStateManager)
+	private deactivate() {
+		this.hidePage()
+	}
+
+	private fillData() {
+		this.doorNameInput.value = this.data["name"];
+		this.doorNameChanged();
+		this.fillPersonList(this.data.users)
+		// TODO: Need to call fillPersonList with person data for this door
+	}
+
+	private fillPersonList(data) {
+		this.personList.innerText = ""
+		for(const e of data) {
+			const p = e.user
+			const newP:any = this.personExample.cloneNode(true);
+			newP.dataset.id = p.id;
+			newP.children[0].innerText = p["username"];
+			newP.children[1].children[0].value = e["hasAccess"];
+			this.personList.appendChild(newP)
+		}
+	}
+
+	private async submitEdit() {
+		this.data.name = this.doorNameInput.value;
+		const children = this.personList.children;
+		this.data.User_Door = []
+		for (let i = 0; i < children.length; i++) {
+			const el = children[i] as HTMLDivElement
+			const id = el.dataset.id as string
+			if((el.children[1].children[0] as any).value) {
+				this.data.User_Door.push({
+					uid: parseInt(id)
+				})
+			}
+		}
+		delete this.data.users
+		if (this.data.id != -1) {
+			await DataFetcher.postAction("/door/edit/", this.data)
+		} else {
+			delete this.data.id
+			const res = await DataFetcher.postAction("/door/create/", this.data)
+			if(!res.success) {
+				console.log("An error has occured during creation")
+			}
+		}
+		MainStateManager.getInstance().setState("dashboard")
+	}
+
+	protected override postCreation(): void {
+		this.personExample = this.personList.children[0] as HTMLDivElement
+	}
+	/**
+	 * 
+	 */
+	protected cancelEdit(){
+		MainStateManager.getInstance().setState("dashboard")
+	}
+	//#endregion
+	
+}

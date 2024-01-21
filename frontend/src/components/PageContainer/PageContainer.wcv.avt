@@ -1,0 +1,9 @@
+<av-header></av-header>
+<div @element="content" class="content">
+<av-login-page></av-login-page>
+<av-dashboard-page></av-dashboard-page>
+<av-door-form-page></av-door-form-page>
+<av-users-page></av-users-page>
+<av-user-form></av-user-form>
+</div>
+<av-footer></av-footer>

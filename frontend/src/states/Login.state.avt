@@ -1,0 +1,35 @@
+export class Login extends Aventus.State implements Aventus.IState {
+	
+	public static readonly stateName:string = "login";
+	
+	public username!: string;
+	public password!: string;
+
+
+
+	public override onActivate(): void {
+		if(this.username === undefined || this.username === "") {
+			// Return an error
+			return
+		}
+		if(this.password === undefined || this.password === "") {
+			//
+			return
+		}
+		// Needs to hash password
+		// And then make request to /login
+	}
+
+	public constructor(username: string, password:string) {
+		super();
+		this.username = username
+		this.password = password
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public override get name(): string {
+		return Login.stateName;
+	}
+}

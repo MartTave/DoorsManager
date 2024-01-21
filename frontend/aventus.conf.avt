@@ -1,0 +1,21 @@
+{
+	"module": "frontend",
+	"componentPrefix": "av",
+	"hideWarnings": true,
+	"build": [
+		{
+			"name": "Main",
+			"inputPath": [
+				"./src/*"
+			],
+			"outputFile": "./dist/frontend.js"
+		}
+	],
+	"static": [
+		{
+			"name": "mainStatic",
+			"inputPath": "./static",
+			"outputPath": "dist"
+		}
+	]
+}

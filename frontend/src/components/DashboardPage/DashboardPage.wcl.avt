@@ -1,0 +1,108 @@
+import { MainStateManager } from "../../states/StateManager.state.avt";
+import { Dashboard } from "../../states/Dashboard.state.avt";
+import { Page } from "../Page/Page.wcl.avt";
+import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
+import { DoorEdit } from "../../states/DoorEdit.state.avt";
+import { LoggedManager } from "../../libs/LoggedManager.lib.avt";
+
+@OverrideView()
+export class DashboardPage extends Page implements Aventus.DefaultComponent {
+
+	//#region static
+	
+	//#endregion
+	
+	
+	//#region props
+	
+	//#endregion
+	
+	
+	//#region variables
+	
+	
+	@ViewElement()
+	protected content!: HTMLDivElement;
+	@ViewElement()
+	protected addDoorButton!: HTMLAnchorElement;
+
+	@ViewElement()
+	protected doorModel!: HTMLDivElement;
+	@ViewElement()
+	protected doorsList!: HTMLDivElement;
+	//#endregion
+	
+	
+	//#region constructor
+	
+	//#endregion
+	
+	
+	//#region methods
+
+	
+	/**
+	 * 
+	 */
+	protected addDoor(){
+		MainStateManager.getInstance().setState(new DoorEdit(-1))
+	}
+
+	private async getData() {
+		return await DataFetcher.postAction("/doors/", {})
+	}
+
+	@StateActive(Dashboard.name, MainStateManager)
+	private async activate() {
+		this.showPage()
+		const response = await this.getData()
+		if(!await LoggedManager.getAdmin()) {
+			this.addDoorButton.remove()
+		} else {
+			this.content.appendChild(this.addDoorButton)
+		}
+		this.fillList(response.data);
+	}
+	@StateInactive(Dashboard.name, MainStateManager)
+	private deactivate() {
+		this.hidePage()
+	}
+
+	private async fillList(data) {
+		this.doorsList.innerText = "";
+		const isAdmin = await LoggedManager.getAdmin()
+		for(let el of data) {
+			const door: any = this.doorModel.cloneNode(true);
+			door.children[0].children[0].innerText = el.name;
+			door.children[1].toggleAttribute("open", !el.closed)
+			door.children[1].addEventListener("click", async () => {
+				const res = await DataFetcher.postAction("/door/toggle/", {
+					id: el.id,
+					closed: door.children[1].hasAttribute("open")
+				})
+				if (res.success) {
+					if(!door.children[1].hasAttribute("open")) {
+						door.children[1].setAttribute("open", "true")
+					} else {
+						door.children[1].removeAttribute("open")
+					}
+				}
+			});
+			if(isAdmin) {
+				door.children[2].addEventListener("click", () => {
+					MainStateManager.getInstance().setState(new DoorEdit(el.id))
+				})
+			} else {
+				door.children[2].remove()
+			}
+			
+			this.doorsList.appendChild(door)
+		}
+	}
+
+	protected override postCreation(): void {
+		this.doorModel.remove();
+	}
+	//#endregion
+	
+}

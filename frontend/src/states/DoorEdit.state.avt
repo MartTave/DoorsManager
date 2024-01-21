@@ -1,0 +1,20 @@
+import { DataFetcher } from "../libs/DataFetcher.lib.avt";
+
+export class DoorEdit extends Aventus.State implements Aventus.IState {
+
+	public readonly doorId: number;
+
+	public static readonly stateName:string = "door/edit";
+
+	public constructor(doorId: number) {
+		super()
+		this.doorId = doorId;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public override get name(): string {
+		return DoorEdit.stateName;
+	}
+}

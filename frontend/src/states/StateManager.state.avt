@@ -1,0 +1,9 @@
+export class MainStateManager extends Aventus.StateManager implements Aventus.IStateManager {
+	/**
+	 * Get the instance of the StateManager
+	 */
+	public static getInstance() {
+		return Aventus.Instance.get(MainStateManager);
+	}
+	
+}

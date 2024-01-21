@@ -1,0 +1,25 @@
+<div class="form">
+    <div class="doorName" @element="doorName">aha</div>
+    <div class="fields">
+        <div class="field doorName">
+            <div class="label">Door name</div>
+            <input type="text" @element="doorNameInput" @input="doorNameChanged">
+        </div>
+        <div class="field personListWrap">
+            <div class="label">Persons access</div>
+            <div class="personList" @element="personList">
+                <div class="person">
+                    <div class="username">Ceci est un username</div>
+                    <div class="hasAccess">
+                        <av-toggle value="true"></av-toggle>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field actions">
+            <div class="cancel" @click="cancelEdit">Cancel</div>
+            <div class="delete" @click="delete">Delete</div>
+            <div class="submit" @click="submitEdit">Submit</div>
+        </div>
+    </div>
+</div>

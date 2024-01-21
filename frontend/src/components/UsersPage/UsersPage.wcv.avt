@@ -1,0 +1,16 @@
+<div class="content">
+    <div class="header">
+        Users
+    </div>
+    <div @element="userList" class="list" editable="true">
+        <div @element="userModel" class="user">
+            <div class="name">
+                <div class="text">User1</div>
+            </div>
+            <div class="edit">
+                <div class="text">Edit</div>
+            </div>
+        </div>
+    </div>
+    <a @click="addUser" class="addUser">Add user</a>
+</div>
