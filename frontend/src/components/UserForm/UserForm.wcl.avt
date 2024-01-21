@@ -1,0 +1,160 @@
+import type { Toggle } from "../Toggle/Toggle.wcl.avt";
+import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
+import { MainStateManager } from "../../states/StateManager.state.avt";
+import { UserEdit } from "../../states/UserEdit.state.avt";
+import { Page } from "../Page/Page.wcl.avt";
+
+@OverrideView()
+export class UserForm extends Page implements Aventus.DefaultComponent {
+
+	//#region static
+	
+	//#endregion
+	
+	
+	//#region props
+	
+	//#endregion
+	
+	
+	//#region variables
+	
+	@ViewElement()
+	protected isAdmin!: Toggle;
+	protected doorExample!	: HTMLDivElement
+	@ViewElement()
+	protected doorList!: HTMLDivElement;
+	protected data:any;
+	@ViewElement()
+	protected userName!: HTMLDivElement;
+	@ViewElement()
+	protected userNameInput!: HTMLInputElement;
+	@ViewElement()
+	protected userPasswordInput!: HTMLInputElement;
+	//#endregion
+	
+	
+	//#region constructor
+	
+	//#endregion
+	
+	
+	//#region methods
+	
+	@StateActive(UserEdit.stateName, MainStateManager)
+	private async activate() {
+		const id = (MainStateManager.getInstance().getState() as UserEdit).userId
+		if (id !== -1) {
+			this.data = (await DataFetcher.postAction("/user/get/", {id})).data
+		} else {
+			let doors = (await DataFetcher.postAction("/doors/", {})).data
+			for(let i = 0; i < doors.length; i++) {
+				doors[i] = {
+					door: doors[i],
+					hasAccess: false
+				}
+			}
+			this.data = {
+				id: -1,
+				isadmin: false,
+				username: "Default",
+				password: "",
+				doors
+			}
+		}
+		this.fillData()
+		this.showPage()
+	}
+	@StateInactive(UserEdit.stateName, MainStateManager)
+	private deactivate() {
+		this.hidePage()
+	}
+
+	private fillData() {
+		this.userNameInput.value = this.data["username"]
+		this.userPasswordInput.value = ""
+		this.isAdmin.value = this.data["isadmin"]
+		this.usernameChanged();
+		this.fillDoorList(this.data.doors)
+		// TODO: Need to call fillPersonList with person data for this door
+	}
+
+	private fillDoorList(data) {
+		this.doorList.innerText = ""
+		for(const e of data) {
+			const p = e.door
+			const newP:any = this.doorExample.cloneNode(true);
+			newP.dataset.id = p.id;
+			newP.children[0].innerText = p["name"];
+			newP.children[1].children[0].value = e["hasAccess"];
+			this.doorList.appendChild(newP)
+		}
+	}
+
+	/**
+	 * 
+	 */
+	protected usernameChanged(){
+		this.userName.innerText = this.userNameInput.value;
+	}
+	/**
+	 * 
+	 */
+	protected cancelEdit(){
+		MainStateManager.getInstance().setState("dashboard")
+	}
+	/**
+	 * 
+	 */
+	protected async delete(){
+		if (this.data.id != -1) {
+			const res = await DataFetcher.postAction("/user/delete/", {id: this.data.id})
+			if(res.success) {
+				MainStateManager.getInstance().setState("dashboard")
+			} else {
+				console.log("An error occured during deletion")
+			}
+		}
+		MainStateManager.getInstance().setState("dashboard")
+	}
+	/**
+	 * 
+	 */
+	protected async submitEdit(){
+		this.data.username = this.userNameInput.value;
+		const children = this.doorList.children;
+		this.data.User_Door = []
+		for (let i = 0; i < children.length; i++) {
+			const el = children[i] as HTMLDivElement
+			const id = el.dataset.id as string
+			if((el.children[1].children[0] as any).value) {
+				this.data.User_Door.push({
+					did: parseInt(id)
+				})
+			}
+		}
+		delete this.data.doors
+		this.data.isadmin = this.isAdmin.value;
+		if(this.userPasswordInput.value != "") {
+			this.data.password = this.userPasswordInput.value;
+		} else {
+			delete this.data.password
+		}
+		if (this.data.id != -1) {
+			await DataFetcher.postAction("/user/edit/", this.data)
+		} else {
+			delete this.data.id
+			const res = await DataFetcher.postAction("/user/create/", this.data)
+			if(!res.success) {
+				console.log("An error has occured during creation")
+			}
+		}
+		MainStateManager.getInstance().setState("dashboard")
+	}
+
+	protected override postCreation(): void {
+		this.doorExample = this.doorList.children[0] as HTMLDivElement
+	}
+	//#endregion
+	
+}

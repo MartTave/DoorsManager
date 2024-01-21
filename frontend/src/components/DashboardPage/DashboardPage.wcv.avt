@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" @element="content">
     <div class="header">
         Doors
     </div>
@@ -13,4 +13,5 @@
             </div>
         </div>
     </div>
+    <a @element="addDoorButton" @click="addDoor" class="addDoor">addDoor</a>
 </div>

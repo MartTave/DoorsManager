@@ -14,8 +14,12 @@ export async function getDoors(): Promise<Door[]|false> {
     }
 }
 
-type Test = {
+type UserDoorResult = {
     user: User,
+    hasAccess: boolean
+}
+type DoorUserResult = {
+    door: Door,
     hasAccess: boolean
 }
 
@@ -78,6 +82,7 @@ export async function editUser(data: any): Promise<true|Error> {
                 data: {
                     username: data.username,
                     password: data.password,
+                    isadmin: data.isadmin,
                     User_Door: {
                         createMany: {
                             data: object
@@ -168,9 +173,12 @@ export async function editDoor(data: any): Promise<true|Error> {
     })
 }
 
-export async function createUser(userData: User): Promise<true|Error> {
+export async function createUser(userData: any): Promise<true|Error> {
     return new Promise(async (resolve, reject) => {
         try {
+            userData.User_Door = {
+                create: userData.User_Door
+            }
             await prisma.user.create({
                 data: userData
             })
@@ -181,9 +189,12 @@ export async function createUser(userData: User): Promise<true|Error> {
     })
 }
 
-export async function createDoor(doorData: Door): Promise<true|Error> {
+export async function createDoor(doorData: any): Promise<true|Error> {
     return new Promise(async (resolve, reject) => {
         try {
+            doorData.User_Door = {
+                create: doorData.User_Door
+            }
             await prisma.door.create({
                 data: doorData
             })
@@ -249,9 +260,33 @@ export async function getUsers(): Promise<User[]> {
     return prisma.user.findMany()
 }
 
-export async function getUsersForDoor(doorToCheck: Door): Promise<Test[]|false> {
+export async function getUserDetail(userId: number): Promise<User> {
+    return new Promise(async (resolve, reject) => {
+        const res = await prisma.user.findFirst({
+            include: {
+                User_Door: {
+                    include: {
+                        door: true
+                    }
+                }
+            },
+            where: {
+                id: {
+                    equals: userId
+                }
+            }
+        })
+        if(res) {
+            resolve(res)
+        } else {
+            reject()
+        }
+    })
+}
+
+export async function getUsersForDoor(doorToCheck: Door): Promise<UserDoorResult[]|false> {
     try{
-        let usersReturn: Test[] = []
+        let usersReturn: UserDoorResult[] = []
 	    let usersWithAccess:User[]
         let usersWithoutAccess:User[]
         usersWithAccess = await prisma.user.findMany({
@@ -285,14 +320,14 @@ export async function getUsersForDoor(doorToCheck: Door): Promise<Test[]|false> 
             }
         })
         for(let val of usersWithAccess){
-            let thisUser: Test = {
+            let thisUser: UserDoorResult = {
                 user: val,
                 hasAccess: true
             }
             usersReturn.push(thisUser)
         }
         for(let val of usersWithoutAccess){
-            let thisUser: Test = {
+            let thisUser: UserDoorResult = {
                 user: val,
                 hasAccess: false
             }
@@ -320,6 +355,39 @@ export async function checkUser(un: string, pw: string): Promise<User|false> {
     })
     if(matchingUser.length == 0) return false
     return matchingUser[0]
+}
+
+export async function getDoorsForUserDetails(user:User): Promise<DoorUserResult[]|false> {
+    const res:Array<DoorUserResult> = [];
+    const doors = await getDoors()
+    if (!doors) {
+        return false;
+    }
+    const hasAccessDoors = await prisma.door.findMany({
+        where:{
+            User_Door:{
+                some:{
+                    uid:{
+                        equals: user.id
+                    }
+                }
+            }
+        }
+    })
+    for(const d of doors) {
+        let found = false;
+        for(const e of hasAccessDoors) {
+            if(d.id === e.id) {
+                found = true
+                break
+            }
+        }
+        res.push({
+            door: d,
+            hasAccess: found
+        })
+    }
+    return res
 }
 
 export async function getDoorsForUser(user:User): Promise<Door[]|false> {

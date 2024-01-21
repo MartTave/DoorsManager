@@ -43,14 +43,23 @@
                         justify-content: center;
                         width: 60px;
                         border-radius: 15px;
-                        transition: background-color 0.2s;
-                        &:hover {
-                            background-color: rgba(0,0,0,0.2);
-                        }
+                        background-color: var(--bs-blue);
+                        color: var(--bs-white);
                     }
                 }
 
             }
+        }
+        .addUser {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bs-success);
+            color: var(--bs-white);
+            padding: 5px 10px;
+            border-radius: 10px;
+            user-select: none;
+            cursor: pointer;
         }
     }
 }

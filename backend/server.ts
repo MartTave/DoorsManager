@@ -2,7 +2,7 @@ import Express from "express"
 import session from "express-session"
 import { join } from "path"
 import { User } from "@prisma/client";
-import { checkUser, createDoor, createUser, deleteDoor, deleteUser, editDoor, editUser, getDoorDetail, getDoors, getDoorsForUser, getUsers, getUsersForDoor, toggleDoor } from "../DB/test";
+import { checkUser, createDoor, createUser, deleteDoor, deleteUser, editDoor, editUser, getDoorDetail, getDoors, getDoorsForUser, getDoorsForUserDetails, getUserDetail, getUsers, getUsersForDoor, toggleDoor } from "../DB/test";
 const pagePath = "../frontend/"
 const app = Express()
 const port = 3000
@@ -133,6 +133,32 @@ app.post("/door/toggle/", async (req, res) => {
 			success: false,
 			reason: "Not logged"
 		})
+	}
+})
+
+app.post("/user/get/", async (req, res) => {
+	if(req.body.id) {
+		const auth = checkAuth(req.session.id)
+		if (auth > 0) {
+			const details = await getUserDetail(req.body.id)
+			if(details) {
+				const doors = await getDoorsForUserDetails(details)
+				if (doors) {
+					// This shuffle is only here to let me add users to the object right after
+					let toSend:any = details
+					toSend.doors = doors;
+					returnJSON(res, {success: true, data: toSend})
+				} else {
+					returnJSON(res, {success: true, data: details})
+				}
+			} else {
+				returnJSON(res, {success: false, reason: "There was an error while retrieving the door"})
+			}
+		} else {
+			returnJSON(res, {success: false, reason: "You should be an admin"})
+		}
+	} else {
+		returnJSON(res, {success: false, reason: "You need to pass a door id"})
 	}
 })
 

@@ -36,7 +36,6 @@ export class PageContainer extends Aventus.WebComponent implements Aventus.Defau
 
 	protected override async postCreation() {
 		// Checking if user is logged in
-		debugger
 		const res = await LoggedManager.getLogged()
 		if(res) {
 			MainStateManager.getInstance().setState("dashboard")

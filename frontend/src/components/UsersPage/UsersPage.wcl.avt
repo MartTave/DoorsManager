@@ -32,6 +32,14 @@ export class UsersPage extends Page implements Aventus.DefaultComponent {
 	
 	
 	//#region methods
+	
+	/**
+	 * 
+	 */
+	protected addUser(){
+		MainStateManager.getInstance().setState(new UserEdit(-1))
+	}
+
 	@StateActive(Users.stateName, MainStateManager)
 	private async activate() {
 		this.showPage()	
@@ -52,12 +60,14 @@ export class UsersPage extends Page implements Aventus.DefaultComponent {
 	}
 
 	protected fillList(data) {
+		this.userList.innerText = ""
 		for(const p of data) {
 			const pers = this.userModel.cloneNode(true) as HTMLDivElement
-			pers.children[0].children[0].innerHTML = data.username
+			pers.children[0].children[0].innerHTML = p.username
 			pers.children[1].addEventListener("click", () => {
 				MainStateManager.getInstance().setState(new UserEdit(p.id))
 			});
+			this.userList.appendChild(pers)
 		}
 	}
 

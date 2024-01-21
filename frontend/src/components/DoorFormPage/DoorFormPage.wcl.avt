@@ -41,12 +41,44 @@ export class DoorFormPage extends Page implements Aventus.DefaultComponent {
 	/**
 	 * 
 	 */
+	protected async delete(){
+		if (this.data.id != -1) {
+			const res = await DataFetcher.postAction("/door/delete/", {id: this.data.id})
+			if(res.success) {
+				MainStateManager.getInstance().setState("dashboard")
+			} else {
+				console.log("An error occured during deletion")
+			}
+		} else {
+			MainStateManager.getInstance().setState("dashboard")
+		}
+	}
+	/**
+	 * 
+	 */
 	protected doorNameChanged(){
 		this.doorName.innerText = this.doorNameInput.value;
 	}
 	@StateActive(DoorEdit.stateName, MainStateManager)
 	private async activate() {
-		this.data = (await DataFetcher.postAction("/door/get/", {id: (MainStateManager.getInstance().getState() as DoorEdit).doorId})).data
+		const id = (MainStateManager.getInstance().getState() as DoorEdit).doorId
+		if(id !== -1) {
+			this.data = (await DataFetcher.postAction("/door/get/", {id})).data
+		} else {
+			let users = (await DataFetcher.postAction("/users/", {})).data
+			for(let i = 0; i < users.length; i++) {
+				users[i] = {
+					user: users[i],
+					hasAccess: false
+				}
+			}
+			this.data = {
+				id: -1,
+				name: "Default",
+				users
+			}
+		}
+		
 		this.fillData()
 		this.showPage()
 	}
@@ -87,7 +119,16 @@ export class DoorFormPage extends Page implements Aventus.DefaultComponent {
 				})
 			}
 		}
-		await DataFetcher.postAction("/door/edit/", this.data)
+		delete this.data.users
+		if (this.data.id != -1) {
+			await DataFetcher.postAction("/door/edit/", this.data)
+		} else {
+			delete this.data.id
+			const res = await DataFetcher.postAction("/door/create/", this.data)
+			if(!res.success) {
+				console.log("An error has occured during creation")
+			}
+		}
 		MainStateManager.getInstance().setState("dashboard")
 	}
 
@@ -98,7 +139,7 @@ export class DoorFormPage extends Page implements Aventus.DefaultComponent {
 	 * 
 	 */
 	protected cancelEdit(){
-		throw new Error("Method not implemented.");
+		MainStateManager.getInstance().setState("dashboard")
 	}
 	//#endregion
 	

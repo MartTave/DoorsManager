@@ -63,6 +63,8 @@ export class LoginPage extends Page implements Aventus.DefaultComponent {
 	@StateInactive(Login.name, MainStateManager)
 	private deactivate() {
 		this.hidePage()
+		this.username.value = ""
+		this.password.value = ""
 		if(this.callback) {
 			document.removeEventListener("keydown", this.callback)
 		}

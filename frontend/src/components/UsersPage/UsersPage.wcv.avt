@@ -3,7 +3,7 @@
         Users
     </div>
     <div @element="userList" class="list" editable="true">
-        <div @element="userModel" class="door">
+        <div @element="userModel" class="user">
             <div class="name">
                 <div class="text">User1</div>
             </div>
@@ -12,4 +12,5 @@
             </div>
         </div>
     </div>
+    <a @click="addUser" class="addUser">Add user</a>
 </div>

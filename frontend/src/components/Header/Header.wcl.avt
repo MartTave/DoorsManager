@@ -1,6 +1,7 @@
 import { LoggedManager } from "../../libs/LoggedManager.lib.avt";
 import { DataFetcher } from "../../libs/DataFetcher.lib.avt";
 import { MainStateManager } from "../../states/StateManager.state.avt";
+import { DoorEdit } from "../../states/DoorEdit.state.avt";
 
 export class Header extends Aventus.WebComponent implements Aventus.DefaultComponent {
 

@@ -20,6 +20,12 @@ export class DashboardPage extends Page implements Aventus.DefaultComponent {
 	
 	//#region variables
 	
+	
+	@ViewElement()
+	protected content!: HTMLDivElement;
+	@ViewElement()
+	protected addDoorButton!: HTMLAnchorElement;
+
 	@ViewElement()
 	protected doorModel!: HTMLDivElement;
 	@ViewElement()
@@ -34,6 +40,14 @@ export class DashboardPage extends Page implements Aventus.DefaultComponent {
 	
 	//#region methods
 
+	
+	/**
+	 * 
+	 */
+	protected addDoor(){
+		MainStateManager.getInstance().setState(new DoorEdit(-1))
+	}
+
 	private async getData() {
 		return await DataFetcher.postAction("/doors/", {})
 	}
@@ -42,6 +56,11 @@ export class DashboardPage extends Page implements Aventus.DefaultComponent {
 	private async activate() {
 		this.showPage()
 		const response = await this.getData()
+		if(!await LoggedManager.getAdmin()) {
+			this.addDoorButton.remove()
+		} else {
+			this.content.appendChild(this.addDoorButton)
+		}
 		this.fillList(response.data);
 	}
 	@StateInactive(Dashboard.name, MainStateManager)

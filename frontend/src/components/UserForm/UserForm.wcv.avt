@@ -1,0 +1,33 @@
+<div class="form">
+    <div class="userName" @element="userName">aha</div>
+    <div class="fields">
+        <div class="field username">
+            <div class="label">Username</div>
+            <input type="text" @element="userNameInput" @input="usernameChanged">
+        </div>
+        <div class="field password">
+            <div class="label">Password</div>
+            <input type="password" @element="userPasswordInput">
+        </div>
+        <div class="field admin">
+            <div class="label">Admin ?</div>
+            <av-toggle @element="isAdmin"></av-toggle>
+        </div>
+        <div class="field doorListWrap">
+            <div class="label">Door access</div>
+            <div class="doorList" @element="doorList">
+                <div class="door">
+                    <div class="name">Ceci est un username</div>
+                    <div class="hasAccess">
+                        <av-toggle value="true"></av-toggle>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field actions">
+            <div class="cancel" @click="cancelEdit">Cancel</div>
+            <div class="delete" @click="delete">Delete</div>
+            <div class="submit" @click="submitEdit">Submit</div>
+        </div>
+    </div>
+</div>

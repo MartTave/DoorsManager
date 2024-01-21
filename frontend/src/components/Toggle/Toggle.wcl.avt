@@ -7,7 +7,7 @@ export class Toggle extends Aventus.WebComponent implements Aventus.DefaultCompo
 	
 	//#region props
 	@Property()
-	protected value!: boolean;
+	public value!: boolean;
 	//#endregion
 	
 	

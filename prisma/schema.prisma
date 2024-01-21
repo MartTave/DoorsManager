@@ -29,9 +29,9 @@ model Door {
 
 model User_Door {
   uid  Int
-  user User @relation(fields: [uid], references: [id])
+  user User @relation(fields: [uid], references: [id], onDelete: Cascade)
   did  Int
-  door Door @relation(fields: [did], references: [id])
+  door Door @relation(fields: [did], references: [id], onDelete: Cascade)
 
   @@unique([uid, did])
 }

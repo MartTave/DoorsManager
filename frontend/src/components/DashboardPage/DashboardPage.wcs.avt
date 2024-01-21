@@ -28,25 +28,24 @@
                 justify-content: space-between;
 
                 .name, .edit {
-                    flex-grow: 1;
+                    width: 45%;
                     height: 25px;
                 }
 
                 .edit {
+                    width: 45%;
                     display: flex;
                     justify-content: flex-end;
                     cursor: pointer;
                     * {
+                        background-color: var(--bs-blue);
+                        color: var(--bs-white);
                         user-select: none;
                         display: flex;
                         align-items: center;
                         justify-content: center;
                         width: 60px;
                         border-radius: 15px;
-                        transition: background-color 0.2s;
-                        &:hover {
-                            background-color: rgba(0,0,0,0.2);
-                        }
                     }
                 }
 
@@ -63,6 +62,18 @@
                 }
 
             }
+        }
+
+        .addDoor {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bs-success);
+            color: var(--bs-white);
+            padding: 5px 10px;
+            border-radius: 10px;
+            user-select: none;
+            cursor: pointer;
         }
     }
 }
