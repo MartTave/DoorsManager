@@ -136,7 +136,7 @@ export class UserForm extends Page implements Aventus.DefaultComponent {
 		delete this.data.doors
 		this.data.isadmin = this.isAdmin.value;
 		if(this.userPasswordInput.value != "") {
-			this.data.password = this.userPasswordInput.value;
+			this.data.password = (window as any).hasher(this.userPasswordInput.value);
 		} else {
 			delete this.data.password
 		}

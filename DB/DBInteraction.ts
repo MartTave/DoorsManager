@@ -410,27 +410,3 @@ export async function getDoorsForUser(user:User): Promise<Door[]|false> {
         return doorsForUser
     }
 }
-
-async function main() {
-    let theDoors = await getDoors()
-    if(theDoors === false) {
-        console.log("Something went wrong...")
-    } else {
-        const doors = await getUsersForDoor(theDoors[0])
-        //console.log(doors)
-    }
-
-    console.log(await getDoorsForUser({id: 1, username: "hihihi", password: "yo", isadmin: false}))
-	
-}
-
-
-main()
-	.then(async () => {
-		await prisma.$disconnect()
-	})
-	.catch(async (e) => {
-		console.error(e)
-		await prisma.$disconnect()
-		process.exit(1)
-	})

@@ -2,7 +2,7 @@ import Express from "express"
 import session from "express-session"
 import { join } from "path"
 import { User } from "@prisma/client";
-import { checkUser, createDoor, createUser, deleteDoor, deleteUser, editDoor, editUser, getDoorDetail, getDoors, getDoorsForUser, getDoorsForUserDetails, getUserDetail, getUsers, getUsersForDoor, toggleDoor } from "../DB/test";
+import { checkUser, createDoor, createUser, deleteDoor, deleteUser, editDoor, editUser, getDoorDetail, getDoors, getDoorsForUser, getDoorsForUserDetails, getUserDetail, getUsers, getUsersForDoor, toggleDoor } from "../DB/DBInteraction";
 const pagePath = "../frontend/"
 const app = Express()
 const port = 3000
@@ -231,5 +231,5 @@ app.post("/logout/", (req, res) => {
 
 
 app.listen(port, () => {
-	console.log(`Example app listening on port ${port}`)
+	console.log(`Server launched on port : ${port}`)
 })

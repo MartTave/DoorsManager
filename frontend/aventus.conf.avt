@@ -14,7 +14,7 @@
 	"static": [
 		{
 			"name": "mainStatic",
-			"inputPath": "./static",
+			"inputPath": "./src/static",
 			"outputPath": "dist"
 		}
 	]
