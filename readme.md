@@ -4,3 +4,6 @@
 
 ## Folder configuration
 
+The folders are organized in this way :
+
+- 
