@@ -48,6 +48,8 @@ By default, it will look for a databse named **Doors** in local on the port: **5
 
 All this can be changed in the [schema.prisma](./prisma/schema.prisma) file
 
+Once this is done, you can run the command  : `npx prisma migrate dev`, this will generate all the database structure for you base on the schema.prisma file
+
 ### Backend
 
 This project works with **nodejs** for the backend. So you need to have this installed in order for the project to work.
@@ -65,3 +67,7 @@ If you want to read/modify the source code of the web interface. We highly sugge
 To launch the server, you first need to run the database server. You can then run `npm run start` to start the webserver.
 
 By default, the webserver will start on the port **3000**, but you can change this in the [server](./backend/server.ts) file
+
+## Tests
+
+To run tests, you can just run the command : `npm run test`
