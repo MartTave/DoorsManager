@@ -2,7 +2,8 @@
   "name": "doorsmanager",
   "module": "index.ts",
   "scripts": {
-    "start": "npx ts-node ./backend/server.ts"
+    "start": "npx ts-node ./backend/server.ts",
+    "test": "npx ts-node ./tests/databaseTesting.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.8.0",
